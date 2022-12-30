@@ -1,6 +1,7 @@
 # Compiled class file
 *.class
 .idea
+.idea/modules.xml
 allure-results/
 # Log file
 *.log
