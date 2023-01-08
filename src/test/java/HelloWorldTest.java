@@ -31,4 +31,16 @@ public class HelloWorldTest {
 
         System.out.println(response.getString("messages.find{it.message.contains('second')}"));
     }
+
+    @Test
+    public void redirect() {
+        System.out.println(RestAssured
+                .given()
+                .redirects()
+                .follow(false)
+                .when()
+                .get("https://playground.learnqa.ru/api/long_redirect")
+                .andReturn()
+                .getHeader("Location"));
+    }
 }
