@@ -59,6 +59,7 @@ public class HelloWorldTest {
     @Test
     public void lastRedirect() {
         String url = "https://playground.learnqa.ru/api/long_redirect";
+        int countRedirects = 0;
         while (true) {
             System.out.println("URL - " + url);
             Response response = RestAssured
@@ -68,12 +69,13 @@ public class HelloWorldTest {
                     .when()
                     .get(url)
                     .andReturn();
-            if (response.getStatusCode() == HttpStatus.SC_OK){
+            if (response.getStatusCode() == HttpStatus.SC_OK) {
                 break;
             } else {
                 url = response.getHeader("Location");
+                countRedirects++;
             }
         }
-        System.out.println("LastRedirect - " + url);
+        System.out.printf("LastRedirect - %s, CountRedirects - %d%n", url, countRedirects);
     }
 }
