@@ -111,8 +111,6 @@ public class HelloWorldTest {
             String token = jsonPath.getString("token");
 
             while (true) {
-                System.out.printf("Wait %d seconds%n", seconds);
-                Thread.sleep(seconds * 1000L);
                 response = RestAssured
                         .given()
                         .queryParam("token", token)
@@ -120,12 +118,17 @@ public class HelloWorldTest {
                         .andReturn();
                 if (response.getStatusCode() == HttpStatus.SC_OK) {
                     jsonPath = response.jsonPath();
-                    if (jsonPath.get("result") != null) {
-                        System.out.printf("Result - %d%n", jsonPath.getInt("result"));
-                        break;
-                    } else {
-                        System.out.println(jsonPath.getString("status"));
-                    }
+                    if (jsonPath.get("status") != null)
+                        if (jsonPath.getString("status").equals("Job is ready")) {
+                            if (jsonPath.get("result") != null) {
+                                System.out.printf("Result - %d%n", jsonPath.getInt("result"));
+                                break;
+                            }
+                        } else {
+                            System.out.println(jsonPath.getString("status"));
+                        }
+                    System.out.printf("Wait %d seconds%n", seconds);
+                    Thread.sleep(seconds * 1000L);
                 }
             }
         }
