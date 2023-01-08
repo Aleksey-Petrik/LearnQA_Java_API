@@ -32,6 +32,11 @@ public class HelloWorldTest {
         System.out.println(response.getString("messages.find{it.message.contains('second')}"));
     }
 
+    /*
+    Необходимо написать тест, который создает GET-запрос на адрес: https://playground.learnqa.ru/api/long_redirect
+    С этого адреса должен происходит редирект на другой адрес. Наша задача — распечатать адрес, на который редиректит указанные URL.
+    Ответом должна быть ссылка на тест в вашем репозитории.
+     */
     @Test
     public void redirect() {
         System.out.println(RestAssured
