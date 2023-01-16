@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class HelloWorldTest {
     @Test
     public void testHelloWorld() {
@@ -203,6 +205,17 @@ public class HelloWorldTest {
                 }
             }
         }
+    }
+
+    /*
+    В рамках этой задачи с помощью JUnit необходимо написать тест, который проверяет длину какое-то переменной типа String с помощью любого выбранного Вами метода assert.
+    Если текст длиннее 15 символов, то тест должен проходить успешно. Иначе падать с ошибкой.
+    Результатом должна стать ссылка на такой тест.
+     */
+    @Test
+    public void shortLine() {
+        String line = "0123456789123456";
+        assertTrue(line.length() > 15, "The text is smaller!");
     }
 }
 
