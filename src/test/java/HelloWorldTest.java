@@ -250,7 +250,6 @@ public class HelloWorldTest {
                 .when()
                 .post("https://playground.learnqa.ru/api/homework_header")
                 .andReturn();
-        System.out.println(response.getHeaders());
         if (response.getStatusCode() == HttpStatus.SC_OK) {
             assertTrue("Some secret value".equals(response.getHeader("x-secret-homework-header")), "The value does not match.");
         } else {
