@@ -237,6 +237,26 @@ public class HelloWorldTest {
             fail("Status code not 200.");
         }
     }
+
+    /*
+    Необходимо написать тест, который делает запрос на метод: https://playground.learnqa.ru/api/homework_header
+    Этот метод возвращает headers с каким-то значением. Необходимо понять что за headers и с каким значением, и зафиксировать это поведение с помощью assert
+    Результатом должна быть ссылка на коммит с тестом.
+     */
+    @Test
+    public void headers(){
+        Response response = RestAssured
+                .given()
+                .when()
+                .post("https://playground.learnqa.ru/api/homework_header")
+                .andReturn();
+        System.out.println(response.getHeaders());
+        if (response.getStatusCode() == HttpStatus.SC_OK) {
+            assertTrue("Some secret value".equals(response.getHeader("x-secret-homework-header")), "The value does not match.");
+        } else {
+            fail("Status code not 200.");
+        }
+    }
 }
 
 
