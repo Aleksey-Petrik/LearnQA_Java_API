@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class HelloWorldTest {
     @Test
@@ -216,6 +217,25 @@ public class HelloWorldTest {
     public void shortLine() {
         String line = "0123456789123456";
         assertTrue(line.length() > 15, "The text is smaller!");
+    }
+
+    /*
+    Необходимо написать тест, который делает запрос на метод: https://playground.learnqa.ru/api/homework_cookie
+    Этот метод возвращает какую-то cookie с каким-то значением. Необходимо понять что за cookie и с каким значением, и зафиксировать это поведение с помощью assert.
+    Результатом должна быть ссылка на коммит с тестом.
+     */
+    @Test
+    public void cookies(){
+        Response response = RestAssured
+                .given()
+                .when()
+                .post("https://playground.learnqa.ru/api/homework_cookie")
+                .andReturn();
+        if (response.getStatusCode() == HttpStatus.SC_OK) {
+            assertTrue("hw_value".equals(response.getCookies().get("HomeWork")), "The value does not match.");
+        } else {
+            fail("Status code not 200.");
+        }
     }
 }
 
