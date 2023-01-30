@@ -299,7 +299,7 @@ public class HelloWorldTest {
                                 .append(" is Unknown");
                     }
                 }
-                if (sb.length() > 0){
+                if (sb.length() > 0) {
                     System.out.println(headerUserAgent + sb);
                 }
             } else {
