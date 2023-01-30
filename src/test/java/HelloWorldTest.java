@@ -3,6 +3,8 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -225,7 +227,7 @@ public class HelloWorldTest {
     Результатом должна быть ссылка на коммит с тестом.
      */
     @Test
-    public void cookies(){
+    public void cookies() {
         Response response = RestAssured
                 .given()
                 .when()
@@ -244,7 +246,7 @@ public class HelloWorldTest {
     Результатом должна быть ссылка на коммит с тестом.
      */
     @Test
-    public void headers(){
+    public void headers() {
         Response response = RestAssured
                 .given()
                 .when()
@@ -254,6 +256,57 @@ public class HelloWorldTest {
             assertTrue("Some secret value".equals(response.getHeader("x-secret-homework-header")), "The value does not match.");
         } else {
             fail("Status code not 200.");
+        }
+    }
+
+    /*
+    User Agent - это один из заголовков, позволяющий серверу узнавать, с какого девайса и браузера пришел запрос. Он формируется автоматически клиентом, например браузером. Определив, с какого девайса или браузера пришел к нам пользователь мы сможем отдать ему только тот контент, который ему нужен.
+    Наш разработчик написал метод: https://playground.learnqa.ru/ajax/api/user_agent_check
+
+    Метод определяет по строке заголовка User Agent следующие параметры:
+    device - iOS или Android
+    browser - Chrome, Firefox или другой браузер
+    platform - мобильное приложение или веб
+
+    Если метод не может определить какой-то из параметров, он выставляет значение Unknown.
+    Наша задача написать параметризированный тест. Этот тест должен брать из дата-провайдера User Agent и ожидаемые значения, GET-делать запрос с этим User Agent и убеждаться, что результат работы нашего метода правильный - т.е. в ответе ожидаемое значение всех трех полей.
+    Список User Agent и ожидаемых значений можно найти по этой ссылке: https://gist.github.com/KotovVitaliy/138894aa5b6fa442163561b5db6e2e26
+    На самом деле метод не всегда работает правильно. Ответом к задаче должен быть список из тех User Agent, которые вернули неправильным хотя бы один параметр, с указанием того, какой именно параметр неправильный.
+     */
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "Mozilla/5.0 (Linux; U; Android 4.0.2; en-us; Galaxy Nexus Build/ICL53F) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30",
+            "Mozilla/5.0 (iPad; CPU OS 13_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/91.0.4472.77 Mobile/15E148 Safari/604.1",
+            "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36 Edg/91.0.100.0",
+            "Mozilla/5.0 (iPad; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+    })
+    public void userAgent(String headerUserAgent) {
+        Response response = RestAssured
+                .given()
+                .header("User-Agent", headerUserAgent)
+                .get("https://playground.learnqa.ru/ajax/api/user_agent_check")
+                .andReturn();
+        if (response.getStatusCode() == HttpStatus.SC_OK) {
+            JsonPath jsonPath = response.jsonPath();
+            Map<String, String> values = jsonPath.getMap("$");
+            if (values.size() != 0) {
+                StringBuilder sb = new StringBuilder();
+                for (Map.Entry<String, String> value : values.entrySet()) {
+                    if ("Unknown".equals(value.getValue())) {
+                        sb.append("\n\tParameter - ")
+                                .append(value.getKey())
+                                .append(" is Unknown");
+                    }
+                }
+                if (sb.length() > 0){
+                    System.out.println(headerUserAgent + sb);
+                }
+            } else {
+                System.out.println(headerUserAgent + " is empty");
+            }
+        } else {
+            fail("FAIL " + headerUserAgent + ", StatusCode - " + response.getStatusCode());
         }
     }
 }
